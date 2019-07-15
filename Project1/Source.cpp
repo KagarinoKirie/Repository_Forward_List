@@ -2,13 +2,17 @@
 //#define DEBUG
 
 using namespace std;
+template<typename T>
+class List;
+
+template<typename T>
 class Element
 {
-	int Data;
+	T Data;
 	Element* pNext;
 	Element* pPrev;
 public:
-	Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
+	Element(T Data, Element<T>* pNext = nullptr, Element<T>* pPrev = nullptr)
 	{
 		this->Data = Data;
 		this->pNext = pNext;
@@ -26,12 +30,13 @@ public:
 #endif // DEBUG
 
 	}
-	friend class List;
+	friend class List<T>;
 };
+template<typename T>
 class List
 {
-	Element* Head;
-	Element* Tail;
+	Element<T>* Head;
+	Element<T>* Tail;
 	int size;
 public:
 	List()
@@ -52,30 +57,30 @@ public:
 	}
 	// Add element
 
-	void push_front(int Data)
+	void push_front(T Data)
 	{
 		size++;
 		if (Head == nullptr)
 		{
-			Head = Tail = new Element(Data);
+			Head = Tail = new Element<T>(Data);
 			return;
 		}
 		//New->pNext = Head;
 		//New->pPrev= New;
 		//Head = New;
-		Head = Head->pPrev = new Element(Data, Head);
+		Head = Head->pPrev = new Element<T>(Data, Head);
 	}
-	void push_back(int Data)
+	void push_back(T Data)
 	{
 		if (Head == nullptr)
 		{
 			push_front(Data);
 			return;
 		}
-		Tail = Tail->pNext = new Element(Data, nullptr, Tail);
+		Tail = Tail->pNext = new Element<T>(Data, nullptr, Tail);
 		size++;
 	}
-	void insert(int Index, int Data)
+	void insert(int Index, T Data)
 	{
 		if (Index > size)return;
 		if (Index == 0)
@@ -88,7 +93,7 @@ public:
 			push_back(Data);
 			return;
 		}
-		Element* it;
+		Element<T>* it;
 		if (Index < size / 2)
 		{
 			it = Head;
@@ -104,7 +109,7 @@ public:
 		//New->pNext = it;
 		//it->pPrev->pNext = New;
 		//it->pPrev = New;
-		it->pPrev = it->pPrev->pNext = new Element(Data, it, it->pPrev);
+		it->pPrev = it->pPrev->pNext = new Element<T>(Data, it, it->pPrev);
 		size++;
 	}
 	//deleting elements:
@@ -116,7 +121,7 @@ public:
 			Head = Tail = nullptr;
 			return;
 		}
-		Element* it = Head->pNext;
+		Element<T>* it = Head->pNext;
 		delete Head;
 		Head = it;
 		size--;
@@ -147,7 +152,7 @@ public:
 			pop_back();
 			return;
 		}
-		Element* it;
+		Element<T>* it;
 		if (Index < size / 2)
 		{
 			it = Head;
@@ -159,7 +164,7 @@ public:
 			it = Tail;
 			for (int i = 0; i < size - Index - 1; i++)it = it->pPrev;
 		}
-		Element* Del = it;
+		Element<T>* Del = it;
 		it->pPrev->pNext = it->pNext;
 		it->pNext->pPrev = it->pPrev;
 		delete Del;
@@ -168,7 +173,7 @@ public:
 	//methods:
 	void print()
 	{
-		Element* it = Head;
+		Element<T>* it = Head;
 		while (it != nullptr)
 		{
 			cout << it->pPrev << "\t" << it << "\t" << it->Data << "\t" << it->pNext << endl;
@@ -178,7 +183,7 @@ public:
 	}
 	void print_reverse()
 	{
-		Element* it = Tail;
+		Element<T>* it = Tail;
 		while (it != nullptr)
 		{
 			cout << it->pPrev << "\t" << it << "\t" << it->Data << "\t" << it->pNext << endl;
@@ -193,10 +198,10 @@ void main() {
 	setlocale(LC_ALL, "");
 	int n;
 	cout << "Input lsit size: "; cin >> n;
-	List list;
+	List<double> list;
 	for (int i = 0; i < n; i++)
 	{
-		list.push_front(rand() % 100);
+		list.push_front(double(rand() % 100)/10);
 	}
 	/*list.push_front(3);
 	list.push_back(3);*/
